@@ -47,7 +47,7 @@ int adicionarCidade(Grafo* grafo, const char* nome) {
     strcpy(grafo->cidades[grafo->numCidades].nome, nome);
     grafo->numCidades++;
     printf("Cidade '%s' adicionada com sucesso (ID: %d).\n", nome, grafo->numCidades - 1);
-    return grafo->numCidades - 1; // retorna id da nova cidade
+    return grafo->numCidades - 1;
 }
 
 int encontrarIdCidade(Grafo* grafo, const char* nome) {
@@ -120,7 +120,7 @@ int minDistancia(int dist[], int visitado[], int numCidades) {
     int min = INT_MAX, min_index = -1;
 
     for (int v = 0; v < numCidades; v++) {
-        if (!visitado[v] && dist[v] < min) { // Deve ser '<' para escolher o menor, não '<='
+        if (!visitado[v] && dist[v] < min) {
             min = dist[v];
             min_index = v;
         }
@@ -151,13 +151,12 @@ void dijkstra(Grafo* grafo, int origemId, int destinoId) {
         pai[i] = -1;
     }
 
-    dist[origemId] = 0; // distancia da origem para ela mesma é 0
+    dist[origemId] = 0;
 
     // Encontra o caminho mais curto para todos os vértices
     for (int count = 0; count < grafo->numCidades - 1; count++) {
         int u = minDistancia(dist, visitado, grafo->numCidades);
 
-        // Se nenhum vértice não visitado puder ser alcançado, saia
         if (u == -1 || dist[u] == INT_MAX) {
             break;
         }
@@ -176,7 +175,7 @@ void dijkstra(Grafo* grafo, int origemId, int destinoId) {
             // - o novo caminho é menor que o anterior
             if (!visitado[v] && dist[u] != INT_MAX && (dist[u] + peso) < dist[v]) {
                 dist[v] = dist[u] + peso;
-                pai[v] = u; // Define u como pai de v
+                pai[v] = u;
             }
             atual = atual->proximo;
         }
@@ -257,7 +256,7 @@ int main() {
                 if (idOrigem != -1 && idDestino != -1) {
                     printf("Digite a distancia (peso) da rota: ");
                     scanf("%d", &pesoRota);
-                    getchar(); // Consome o '\n'
+                    getchar();
                     if (pesoRota > 0) {
                          adicionarRota(&meuGrafo, idOrigem, idDestino, pesoRota);
                     } else {
@@ -288,22 +287,14 @@ int main() {
                 }
                 break;
             case 0:
-                printf("Saindo do programa...\n");
-                // Liberar memoria alocada para as rotas (opcional, mas boa prática)
-                for (int i = 0; i < meuGrafo.numCidades; i++) {
-                    Rota* atual = meuGrafo.cidades[i].adjacencias;
-                    while (atual != NULL) {
-                        Rota* temp = atual;
-                        atual = atual->proximo;
-                        free(temp);
-                    }
-                }
                 break;
             default:
                 printf("Opcao invalida. Tente novamente.\n");
                 break;
         }
     } while (escolha != 0);
+
+    printf("Saindo do programa...\n");
 
     return 0;
 }
